@@ -32,26 +32,45 @@
             $(function () {
                 layui.use('form', function () {
                     var form = layui.form;
-                    layer.msg('玩命卖萌中', function () {
-                        //关闭后的操作
-                    });
                     //监听提交
                     form.on('submit(login)', function (data) {
                         var url = data.form.action;
                         var param = {
-                            'username':data.field.username,
-                            'password':data.field.password
+                            'username': data.field.username,
+                            'password': data.field.password
                         };
+                        /**
+                         * layer.msg icon:
+                         * 1：√
+                         * 2：×
+                         * 3：？
+                         * 4：锁
+                         * 5：哭脸
+                         * 6：笑脸
+                         * 7：感叹号
+                         */
                         $.ajax({
                             url: url,
                             data: param,
                             type: "Post",
                             dataType: "json",
                             success: function (data) {
-                                layer.msg(data.msg);
+                                if (data.code == 1) {
+                                    layer.msg(data.msg, {
+                                        icon: 1,
+                                        time: 2000
+                                    },function(){
+                                        location.href = adminUrl.yGetWebPath()+"/admin/index";
+                                    });
+                                } else {
+                                    layer.msg(data.msg, {
+                                        icon: 2,
+                                        time: 2000
+                                    });
+                                }
                             },
                             error: function (data) {
-                                $.messager.alert('错误', data.msg);
+                                layer.msg(data.msg);
                             }
                         });
                         return false;
